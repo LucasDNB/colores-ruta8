@@ -15,12 +15,17 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Credenciales incorrectas' }, { status: 401 })
     }
 
-    // Verificar contraseña contra hash bcrypt (almacenado en base64 para evitar problemas con $ en env vars)
-    const hashRaw = process.env.ADMIN_PASSWORD_HASH || ''
-    const hash = hashRaw.startsWith('$2')
-      ? hashRaw
-      : Buffer.from(hashRaw, 'base64').toString('utf8')
-    const valid = await bcrypt.compare(password, hash)
+    // Verificar contraseña: soporta ADMIN_PASSWORD (texto plano) o ADMIN_PASSWORD_HASH (bcrypt)
+    let valid = false
+    if (process.env.ADMIN_PASSWORD) {
+      valid = password === process.env.ADMIN_PASSWORD
+    } else {
+      const hashRaw = process.env.ADMIN_PASSWORD_HASH || ''
+      const hash = hashRaw.startsWith('$2')
+        ? hashRaw
+        : Buffer.from(hashRaw, 'base64').toString('utf8')
+      valid = await bcrypt.compare(password, hash)
+    }
     if (!valid) {
       return NextResponse.json({ error: 'Credenciales incorrectas' }, { status: 401 })
     }

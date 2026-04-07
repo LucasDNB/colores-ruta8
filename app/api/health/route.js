@@ -7,8 +7,12 @@ export async function GET() {
     JWT_EXPIRES_IN:        !!process.env.JWT_EXPIRES_IN,
     ADMIN_USERNAME:        !!process.env.ADMIN_USERNAME,
     ADMIN_PASSWORD_HASH:   !!process.env.ADMIN_PASSWORD_HASH,
-    hash_starts_correctly: process.env.ADMIN_PASSWORD_HASH?.startsWith('$2'),
     hash_length:           process.env.ADMIN_PASSWORD_HASH?.length ?? 0,
+    hash_valid: (() => {
+      const raw = process.env.ADMIN_PASSWORD_HASH || ''
+      const decoded = raw.startsWith('$2') ? raw : Buffer.from(raw, 'base64').toString('utf8')
+      return decoded.startsWith('$2')
+    })(),
   }
 
   const allOk = Object.values(checks).every(v => v === true)

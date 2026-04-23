@@ -30,9 +30,9 @@ export async function GET(request) {
       values.push(`%${cliente}%`)
     }
     if (color) {
-      conditions.push(`(color_name ILIKE $${idx++} OR color_number_1 ILIKE $${idx} OR color_number_2 ILIKE $${idx++})`)
-      values.push(`%${color}%`, `%${color}%`)
-      idx++
+      const p1 = idx++, p2 = idx++, p3 = idx++
+      conditions.push(`(color_name ILIKE $${p1} OR color_number_1 ILIKE $${p2} OR color_number_2 ILIKE $${p3})`)
+      values.push(`%${color}%`, `%${color}%`, `%${color}%`)
     }
     if (producto) {
       conditions.push(`recipe_product_name ILIKE $${idx++}`)

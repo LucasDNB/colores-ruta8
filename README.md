@@ -1,6 +1,6 @@
 # Mix2Win — Customer Colors
 
-Aplicación web interna para consultar el histórico de pedidos de color de clientes de **AkzoNobel**. Permite filtrar, buscar y paginar sobre miles de registros de recetas de pintura almacenados en PostgreSQL, tras un login protegido con JWT.
+Aplicación web interna para consultar el histórico de pedidos de color de clientes. Permite filtrar, buscar y paginar sobre miles de registros de pintura almacenados en PostgreSQL, tras un login protegido con JWT.
 
 ---
 
@@ -49,51 +49,6 @@ lib/
 La API consulta la tabla `customer_colors` con los siguientes campos:
 
 `created_date`, `customer_name`, `color_name`, `color_number_1`, `color_number_2`, `recipe_product_name`, `recipe_product_basepaint_name`, `delivery_can_size_amount`, `delivery_number_of_cans`.
-
-## Variables de entorno
-
-Crear un archivo `.env.local` con:
-
-```env
-# Base de datos
-DATABASE_URL=postgres://usuario:password@host:5432/basedatos
-
-# JWT
-JWT_SECRET=una-clave-larga-y-aleatoria
-JWT_EXPIRES_IN=8h
-
-# Credenciales de admin
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=contraseña-en-texto-plano
-# — o bien —
-ADMIN_PASSWORD_HASH=<hash-bcrypt-o-base64-del-hash>
-```
-
-Si `ADMIN_PASSWORD` está definida, se usa esa (texto plano). Si no, se cae al `ADMIN_PASSWORD_HASH` (acepta bcrypt directo o codificado en base64 para sortear restricciones de Vercel con el carácter `$`).
-
-Para generar un hash bcrypt:
-
-```bash
-npm run generate-hash "mi-contraseña"
-```
-
-## Desarrollo
-
-```bash
-npm install
-npm run dev
-```
-
-Abrir [http://localhost:3000](http://localhost:3000). Se redirige automáticamente a `/login` o `/dashboard` según haya sesión activa.
-
-## Build y deploy
-
-```bash
-npm run build
-npm start
-```
-
-En Vercel: cargar las variables de entorno en el panel del proyecto y hacer deploy. Verificar con `GET /api/health` que devuelva `{ ok: true }`.
 
 ## Seguridad
 
